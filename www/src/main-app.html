@@ -1,0 +1,30 @@
+<link rel='import' href='../bower_components/polymer/polymer.html'>
+<link rel='import' href='./layouts/login-form.html'>
+
+
+<dom-module id='main-app'>
+  <template>
+    <template is='dom-if' if='[[localDomoInstance]]'>
+      
+    </template>
+
+    <template is='dom-if' if='[[!localDomoInstance]]'>
+      <login-form></login-form>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'main-app',
+
+
+  properties: {
+    localDomoInstance: {
+      type: Boolean,
+      value: false,
+    }
+  },
+
+});
+</script>
