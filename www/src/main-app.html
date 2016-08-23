@@ -5,9 +5,7 @@
 <dom-module id='main-app'>
   <template>
     <template is='dom-if' if='[[localDomoInstance]]'>
-      <div>
-        Go to Firebase 
-      </div>
+      <iframe src="http://192.168.1.101:8123" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
     </template>
 
     <template is='dom-if' if='[[!localDomoInstance]]'>
@@ -17,6 +15,13 @@
 </dom-module>
 
 <script>
+function fixiFrame () {
+   if (true) {
+      iFrameContentHeight = document.getElementById('theiFrame').contentDocument.body.offsetHeight;
+      document.getElementById('theiFrame').style.height = iFrameContentHeight + 'px';
+   }
+};
+
 Polymer({
   is: 'main-app',
 
@@ -33,6 +38,11 @@ Polymer({
       notify: true,
       reflectToAttribute: true,
     },
+
+    domoInfo: {
+      type: Object,
+      notify: true,
+    }
   },
 
   
