@@ -11,20 +11,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!doctype html>
 <html lang="en">
 <head>
-  <script type="text/javascript" src="./build/core.js"></script>
-  <script type="text/javascript" charset="utf-8" src="cordova.js"></script>  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-
   <title>Domo</title>
 
-  <link rel="shortcut icon" sizes="32x32" href="/images/app-icon-32.png">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#fff">
+
   <link rel="manifest" href="/manifest.json">
-
+  <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
   <script>
-
     // setup Polymer options
     window.Polymer = {lazyRegister: true, dom: 'shadow'};
 
@@ -48,15 +43,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         navigator.serviceWorker.register('/service-worker.js');
       });
     }
-
   </script>
-
-  <link rel="import" href="/src/my-app.html">
   <link rel='import' href='./bower_components/paper-styles/typography.html'>
   <link rel='import' href='./bower_components/iron-flex-layout/iron-flex-layout-classes.html'>
   <link rel='import' href='./src/layouts/login-form.html'>
-
-
+  <link rel='import' href='./src/main-app.html'>
   <style>
 
     body {
@@ -71,26 +62,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 </head>
 <body>
-  <login-form></login-form>
-
-  <p id="zeroconf2">Hi all</p>
-
-  <script type="text/javascript">
-   function onDeviceReady() {
-        document.getElementById("zeroconf2").innerHTML = "Looking for Domo Device...";
-        var ZeroConf = cordova.plugins.zeroconf;
-        console.log(ZeroConf);
-        ZeroConf.watch('_domo._tcp.local.', function(resp){
-            document.getElementById("zeroconf2").innerHTML = JSON.stringify(resp.service);
-            console.log("Found something");
-        });
-    }
-    function onLoad() {
-        document.addEventListener("deviceready", onDeviceReady, false);
-    }
-    onLoad();
-  </script>
-
-
+  <main-app></main-app>
 </body>
 </html>

@@ -5,11 +5,13 @@
 <dom-module id='main-app'>
   <template>
     <template is='dom-if' if='[[localDomoInstance]]'>
-      
+      <div>
+        Go to Firebase 
+      </div>
     </template>
 
     <template is='dom-if' if='[[!localDomoInstance]]'>
-      <login-form></login-form>
+      <login-form spinnerinfo="{{loadingFormInfo}}"></login-form>
     </template>
   </template>
 </dom-module>
@@ -18,13 +20,36 @@
 Polymer({
   is: 'main-app',
 
-
   properties: {
     localDomoInstance: {
       type: Boolean,
       value: false,
-    }
+      notify: true,
+    },
+
+    loadingFormInfo: {
+      type: String,
+      value: "Loading App...",
+      notify: true,
+      reflectToAttribute: true,
+    },
   },
 
+  
+  ready: function(){
+        console.log("looking for logomessage");
+        this.loadingFormInfo = "Looking for Domo Device...";
+        var ZeroConf = cordova.plugins.zeroconf;
+        console.log(ZeroConf);
+        ZeroConf.watch('_domo._tcp.local.', function(resp){            
+            console.log("Found Domo Device");
+            console.log(JSON.stringify(resp.service));
+            this.localDomoInstance = true;
+          }.bind(this)
+        );
+
+        console.log("Main-app ready");
+      },
 });
+
 </script>

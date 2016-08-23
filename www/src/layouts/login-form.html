@@ -6,7 +6,6 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input-error.html">
 <link rel="import" href="../../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
-<link rel="import" href="../../css/domo-style.html"> 
 
 
 
@@ -58,114 +57,31 @@
       <img src='../../img/Domo.png' class='logo'></img>
       <a href="#" id="hideKeyboardOnFocus"></a>
       <div class='interact'>
-        <div id='loginform' hidden$="[[showLoading]]">
-          <paper-input-container id="passwordDecorator" invalid="[[isInvalid]]">
-            <label>Password</label>
-            <input is="iron-input" type="password" id="passwordInput" />
-            <paper-input-error invalid="[[isInvalid]]">[[errorMessage]]</paper-input-error>
-          </paper-input-container>
-          <div class="layout horizontal center">
-            <paper-checkbox for id='rememberLogin'>Remember</paper-checkbox>
-            <paper-button id='loginButton'>Log In</paper-button>
-          </div>
-        </div>
-        <div id="validatebox" hidden$="[[!showLoading]]">
+        <div id="validatebox">
           <paper-spinner active="true"></paper-spinner><br />
-          <div id="logomessage" class="validatemessage">Loading data</div>
+          <div id="logomessage" class="validatemessage">{{spinnerinfo}}</div>
         </div>
       </div>
     </div>
   </template>
 </dom-module>
+  <script>
+    Polymer({
+      is: 'login-form',
 
-<script>
-Polymer({
-  is: 'login-form',
+      properties: {
+        spinnerinfo: {
+          type: String,
+          notify: true,
+        },
+      },
 
-  behaviors: [window.hassBehavior],
+      ready: function(){
+        console.log("Login form ready");
+        console.log(this.spinnerInfo);
+      },
+    });
+  </script>
 
-  properties: {
-    hass: {
-      type: Object,
-    },
 
-    errorMessage: {
-      type: String,
-      bindNuclear: function (hass) { return hass.authGetters.attemptErrorMessage; },
-    },
 
-    isInvalid: {
-      type: Boolean,
-      bindNuclear: function (hass) { return hass.authGetters.isInvalidAttempt; },
-    },
-
-    isValidating: {
-      type: Boolean,
-      observer: 'isValidatingChanged',
-      bindNuclear: function (hass) { return hass.authGetters.isValidating; },
-    },
-
-    loadingResources: {
-      type: Boolean,
-      value: false,
-    },
-
-    forceShowLoading: {
-      type: Boolean,
-      value: false,
-    },
-
-    showLoading: {
-      type: Boolean,
-      computed: 'computeShowSpinner(forceShowLoading, isValidating)',
-    },
-  },
-
-  listeners: {
-    keydown: 'passwordKeyDown',
-    'loginButton.tap': 'validatePassword',
-  },
-
-  observers: [
-    'validatingChanged(isValidating, isInvalid)',
-  ],
-
-  attached: function () {
-    window.removeInitMsg();
-  },
-
-  computeShowSpinner: function (forceShowLoading, isValidating) {
-    return forceShowLoading || isValidating;
-  },
-
-  validatingChanged: function (isValidating, isInvalid) {
-    if (!isValidating && !isInvalid) {
-      this.$.passwordInput.value = '';
-    }
-  },
-
-  isValidatingChanged: function (newVal) {
-    if (!newVal) {
-      this.async(function () { this.$.passwordInput.focus(); }.bind(this), 10);
-    }
-  },
-
-  passwordKeyDown: function (ev) {
-    // validate on enter
-    if (ev.keyCode === 13) {
-      this.validatePassword();
-      ev.preventDefault();
-    // clear error after we start typing again
-    } else if (this.isInvalid) {
-      this.isInvalid = false;
-    }
-  },
-
-  validatePassword: function () {
-    this.$.hideKeyboardOnFocus.focus();
-
-    window.validateAuth(this.$.passwordInput.value,
-                        this.$.rememberLogin.checked);
-  },
-});
-</script>
