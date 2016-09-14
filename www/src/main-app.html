@@ -5,7 +5,7 @@
 <dom-module id='main-app'>
   <template>
     <template is='dom-if' if='[[localDomoInstance]]'>
-      <iframe src="http://192.168.1.101:8123" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
+      <iframe src="http://192.168.1.105:8123" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
     </template>
 
     <template is='dom-if' if='[[!localDomoInstance]]'>
@@ -43,19 +43,25 @@ Polymer({
       type: Object,
       notify: true,
     }
-  },
 
+    localIpAddress: {
+      type: String,
+      notify: true,
+    }
+  },
   
   ready: function(){
         console.log("looking for logomessage");
         this.loadingFormInfo = "Looking for Domo Device...";
         var ZeroConf = cordova.plugins.zeroconf;
         console.log(ZeroConf);
-        ZeroConf.watch('_domo._tcp.local.', function(resp){            
-            console.log("Found Domo Device");
-            console.log(JSON.stringify(resp.service));
-            this.localDomoInstance = true;
-          }.bind(this)
+        ZeroConf.watch('_domo._tcp.local.', 
+                       function(resp){            
+                          console.log("Found Domo Device");
+                          console.log(JSON.stringify(resp.service));
+                          this.localDomoInstance = true;
+                          this.localIpAddress = resp.service;
+                        }.bind(this)
         );
 
         console.log("Main-app ready");
