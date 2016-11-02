@@ -5,3 +5,6 @@ platforms/android
 /Domo-Cordova.sln
 /Domo-Cordova.jsproj.user
 /taco.json
+/www/cordova.js
+platforms
+plugins/android.json
