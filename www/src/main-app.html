@@ -51,9 +51,8 @@ Polymer({
   },
   
   ready: function(){
-        console.log("looking for logomessage");
         this.loadingFormInfo = "Looking for Domo Device...";
-        var ZeroConf = cordova.plugins.zeroconf;
+        /*var ZeroConf = cordova.plugins.zeroconf;
         console.log(ZeroConf);
         ZeroConf.watch('_domo._tcp.local.', 
                        function(resp){            
@@ -62,7 +61,7 @@ Polymer({
                           this.localDomoInstance = true;
                           this.localIpAddress = resp.service;
                         }.bind(this)
-        );
+        );*/
 
         console.log("Main-app ready");
       },
