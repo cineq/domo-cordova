@@ -58,7 +58,7 @@
                       auth-domain="cineq-page.firebaseapp.com"
                       database-url="https://cineq-page.firebaseio.com">
         </firebase-app>
-        <div class="layout vertical center center-center fit" hidden$="{{signedInn}}">
+        <div class="layout vertical center center-center fit">
             <img src='../../img/Domo.png' class='logo'></img>
             <a href="#" id="hideKeyboardOnFocus"></a>
             <div class='interact'>
@@ -67,17 +67,18 @@
                     <div id="logomessage" class="validatemessage">{{spinnerinfo}}</div>
                 </div>
             </div>
-            <login-fire google
+            <social-login-fire google
                         facebook
                         mini
                         debug
                         signed-in="{{signedInn}}"
                         app-name="domo">
-            </login-fire>
+            </social-login-fire>
+            <p>{{signedInn}}</p>
             <template is='dom-if' if="[[signedInn]]">
                 <p>Signed In</p>
             </template>
-            <template is='dom-if' if="{{!signedInn}}">
+            <template is='dom-if' if="[[!signedInn]]">
                 <p>Signed Out</p>
             </template>
         </div>
