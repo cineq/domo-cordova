@@ -9,7 +9,7 @@
     "app-route": "polymerelements/app-route#^0.9.1",
     "app-storage": "polymerelements/app-storage#^0.9.0",
     "firebase": "^3.0",
-    "iron-elements": "PolymerElements/iron-elements#~1.0.10",
+    "iron-elements": "PolymerElements/iron-elements#~1.0.3",
     "iron-flex-layout": "^1.3.1",
     "iron-icon": "polymerelements/iron-icon#^1.0.0",
     "iron-iconset-svg": "polymerelements/iron-iconset-svg#^1.0.0",
@@ -24,11 +24,15 @@
     "polymer": "polymer/polymer#^1.4.0",
     "polymerfire": "firebase/polymerfire#^0.10.2",
     "web-animations-js": "web-animations/web-animations-js#^2.2.1",
-    "login-fire": "^0.1.0"
+    "login-fire": "^0.1.0",
+    "paper-dialog": "PolymerElements/paper-dialog#1.0.3"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0",
     "iron-component-page": "PolymerElements/iron-component-page#^1.0",
     "note-app-elements": "polymerlabs/note-app-elements"
+  },
+  "resolutions": {
+    "polymerfire": "^0.10.2"
   }
 }

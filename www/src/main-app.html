@@ -3,15 +3,18 @@
 
 
 <dom-module id='main-app'>
-  <template>
-    <template is='dom-if' if='[[localDomoInstance]]'>
-      <iframe src="http://192.168.1.105:8123" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
+    <template>
+        <template is='dom-if' if='[[goLocal]]'>
+            <iframe src="http://192.168.1.104:8123" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
+        </template>
+        <template is='dom-if' if='[[goRemote]]'>
+            <iframe src="[[remoteAddress]]" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
+        </template>
+        <template is='dom-if' if="{{goLogin}}">
+            <login-form signed-inn="{{signedIn}}" domo-present="[[localDomoInstance]]" spinnerinfo="{{loadingFormInfo}}" go-local="{{forceLocal}}" link-string="{{remoteLinkAvailable}}">
+            </login-form>
+        </template>
     </template>
-
-    <template is='dom-if' if='[[!localDomoInstance]]'>
-      <login-form spinnerinfo="{{loadingFormInfo}}"></login-form>
-    </template>
-  </template>
 </dom-module>
 
 <script>
@@ -47,9 +50,73 @@ Polymer({
     localIpAddress: {
       type: String,
       notify: true,
+    },
+
+    signedIn: {
+        type: Boolean,
+        notify: true,
+        value: false,
+        observer: '_signInChanged'
+    },
+
+    forceLocal: {
+        type: Boolean,
+        notify: true,
+        value: false,
+    },
+
+    remoteAddress: {
+        type: String,
+        computed: '_computeAdress(remoteLinkAvailable)'
+    },
+
+    goRemote: {
+        type: Boolean,
+        computed: '_computeGoRemote(signedIn, remoteAddress)'
+    },
+
+    goLogin: {
+        type: Boolean,
+        value: true,
+        computed: '_computeGoLogin(forceLocal, remoteAddress)'
+    },
+
+    goLocal: {
+    type: Boolean,
+    computed: '_computeGoLocal(forceLocal, localDomoInstance)'
     }
+
+
   },
-  
+
+  _signInChanged: function (){
+      console.log("signed in changed to: " + this.signedIn);
+  },
+
+  _computeAdress: function (remoteLinkAvailable) {
+      console.log("update remoteLinkAvailable to: " + remoteLinkAvailable);
+      if (remoteLinkAvailable != null) {
+          //return "http://asdasdas" + remoteLinkAvailable;
+          return "https://ppmbnbxx.p50.weaved.com/";
+      }
+      else {
+          return null;
+      }
+  },
+
+  _computeGoRemote: function (signedIn, remoteAddress) {
+      console.log("setting remote to: " + (signedIn && remoteAddress));
+      return signedIn && remoteAddress;
+  },
+
+  _computeGoLogin: function (forceLocal, remoteAddress) {
+      return !forceLocal && !remoteAddress;
+  },
+
+  _computeGoLocal: function (forceLocal, localDomoInstance) {
+      return forceLocal && localDomoInstance;
+  },
+
   ready: function(){
         this.loadingFormInfo = "Looking for Domo Device...";
         /*var ZeroConf = cordova.plugins.zeroconf;

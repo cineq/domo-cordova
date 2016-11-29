@@ -3,12 +3,19 @@
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input-container.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input-error.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/platinum-sw/platinum-sw-elements.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../../bower_components/login-fire/login-fire.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
 
 
 <dom-module id="login-form">
@@ -29,7 +36,7 @@
             }
 
             paper-button {
-                margin-left: 72px;
+                
             }
 
             .interact {
@@ -53,35 +60,59 @@
                 min-width: 300px;
             }
         </style>
+        <!-- Initialize Firebase Instances-->
         <firebase-app name="domo"
                       api-key="AIzaSyAndgWo_bp_0uffEWt1y1ytZfrFdKuQxTQ"
                       auth-domain="cineq-page.firebaseapp.com"
                       database-url="https://cineq-page.firebaseio.com">
         </firebase-app>
+
+        <firebase-document id="domoLink"
+                        app-name="domo"
+                        path="/devices/0/localurl",
+                        data="{{link}}">
+        </firebase-document>
+
+        <firebase-document id="idData"
+                           app-name="domo"
+                           path="/users/[[userData.uid]]/domoDevice"
+                           data="{{deviceId}}">
+        </firebase-document>
+
         <div class="layout vertical center center-center fit">
             <img src='../../img/Domo.png' class='logo'></img>
             <a href="#" id="hideKeyboardOnFocus"></a>
-            <div class='interact'>
+            <div class='interact' hidden$="[[domoPresent]]">
                 <div id="validatebox">
                     <paper-spinner active="true"></paper-spinner>
                     <div id="logomessage" class="validatemessage">{{spinnerinfo}}</div>
                 </div>
             </div>
-            <social-login-fire google
-                        facebook
-                        mini
-                        debug
-                        signed-in="{{signedInn}}"
-                        app-name="domo">
-            </social-login-fire>
-            <p>{{signedInn}}</p>
-            <template is='dom-if' if="[[signedInn]]">
-                <p>Signed In</p>
-            </template>
+            <paper-button class="center" raised disabled="[[!domoPresent]]" onclick="localDomo">Local Domo</paper-button>         
             <template is='dom-if' if="[[!signedInn]]">
-                <p>Signed Out</p>
+                <social-login-fire google
+                                   facebook
+                                   mini
+                                   signed-in="{{signedInn}}"
+                                   user="{{userData}}"
+                                   app-name="domo">
+                </social-login-fire>
             </template>
+
+            <div hidden$="[[hideRegister]]">
+                <p>Brak zarejestrowanego Domo</p>
+                <paper-button raised on-click="toggleDialog">Zarejestruj Domo</paper-button>
+                <paper-dialog id="notediag" entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+                              transition="paper-dialog-transition" alwaysOnTop="true">
+                    <paper-input id="dialog-add-note-header"
+                                 label="Domo ID"
+                                 value="{{deviceIdLocal}}">
+                    </paper-input>
+                    <paper-button label="Ok" on-click="closeDialog">Potwierdz</paper-button>
+                </paper-dialog>
+            </div>
         </div>
+  
     </template>
 </dom-module>
 <script>
@@ -97,17 +128,73 @@
               signedInn: {
                   type: Boolean,
                   notify: true,
+              },
+
+              domoPresent: {
+                  type: Boolean,
+              },
+
+              goLocal: {
+                  type: Boolean,
+                  notify: true,
+              },
+
+              hideRegister: {
+                  type: Boolean,
+                  value: true,
+                  computed: 'domoRegistered(deviceId)'
+              },
+
+              linkString: {
+                  type: String,
+                  notify: true,
+                  computed: 'validateLink(link)'
               }
           },
 
           ready: function () {
               console.log("Login form ready");
-              console.log(this.signedInn);
           },
 
-          isSignedIn: function (signed) {
-              return signed;
+          localDomo: function () {
+              goLocal = true;
           },
+
+          toggleDialog: function () {
+              this.$.notediag.open();
+          },
+
+          closeDialog: function () {
+              this.$.notediag.close();
+              this.deviceId = this.deviceIdLocal;
+              console.log(this.deviceId);
+              console.log(this.hideRegister);
+              console.log(this.domoRegistered());
+              console.log(this.userData.uid);
+          },
+
+          domoRegistered: function (deviceId) {
+              console.log(this.deviceId);
+              if (deviceId == undefined) {
+                  return true;
+              }
+              else if (typeof deviceId === 'string' || deviceId instanceof String) {
+                  return true;
+              }
+              else {
+                  return false;
+              }
+          },
+
+          validateLink: function (link) {
+              if (typeof link === 'string' || link instanceof String) {
+                  console.log(this.link);
+                  return this.link;
+              }
+              else {
+                  return null;
+              }
+          }
       });
 </script>
 
