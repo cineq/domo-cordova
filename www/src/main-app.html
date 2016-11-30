@@ -97,7 +97,7 @@ Polymer({
       console.log("update remoteLinkAvailable to: " + remoteLinkAvailable);
       if (remoteLinkAvailable != null) {
           //return "http://asdasdas" + remoteLinkAvailable;
-          return "https://ppmbnbxx.p50.weaved.com/";
+          return "https://tbhazpcx.p50.weaved.com/";
       }
       else {
           return null;
@@ -105,15 +105,17 @@ Polymer({
   },
 
   _computeGoRemote: function (signedIn, remoteAddress) {
-      console.log("setting remote to: " + (signedIn && remoteAddress));
-      return signedIn && remoteAddress;
+      console.log("setting remote to: " + (/*signedIn && */!!remoteAddress));
+      return /*signedIn &&*/ !!remoteAddress;
   },
 
   _computeGoLogin: function (forceLocal, remoteAddress) {
+      console.log("setting login to: " + (forceLocal && remoteAddress));
       return !forceLocal && !remoteAddress;
   },
 
   _computeGoLocal: function (forceLocal, localDomoInstance) {
+      console.log("setting local to: " + (forceLocal && localDomoInstance));
       return forceLocal && localDomoInstance;
   },
 
