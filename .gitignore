@@ -1,2 +1,10 @@
 www/bower_components
 platforms/android
+/.vs
+/Domo-Cordova.jsproj
+/Domo-Cordova.sln
+/Domo-Cordova.jsproj.user
+/taco.json
+/www/cordova.js
+platforms
+plugins/android.json
